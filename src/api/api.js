@@ -1,4 +1,4 @@
-import { get, post } from '@/utils/request'
+import { get, post, postFormData } from '@/utils/request'
 
 const HttpConstant = {
   BASE_CHARGE: '/baseCharge/getAll',
@@ -6,11 +6,10 @@ const HttpConstant = {
 }
 
 export function excelImport (formData) {
-  return sendRequest(HttpConstant.EXCEL_IMPORT, {formData: formData})
+  return sendFormRequest(HttpConstant.EXCEL_IMPORT, formData)
 }
 
 export function getAllBaseCharge (pageNo) {
-  console.log('111111111')
   return sendRequest(HttpConstant.BASE_CHARGE, { pageNo: pageNo })
 }
 
@@ -19,6 +18,9 @@ export function getData (method, params) {
 }
 
 function sendRequest (method, params) {
-  console.log('222222222')
   return post(method, params)
+}
+
+function sendFormRequest (method, param) {
+  return postFormData(method, param)
 }

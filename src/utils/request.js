@@ -1,7 +1,8 @@
 import axios from 'axios'
+// import qs from 'qs'
 
 axios.defaults.timeout = 5000
-axios.defaults.baseURL = 'http://127.0.0.1:8080'
+axios.defaults.baseURL = '/api'
 
 // http request 拦截器
 axios.interceptors.request.use(
@@ -38,9 +39,20 @@ export function get (url, params = {}) {
 }
 
 export function post (url, data = {}) {
-  console.log('33333333333')
   return new Promise((resolve, reject) => {
     axios.post(url, data)
+      .then(response => {
+        resolve(response.data)
+      }, err => {
+        reject(err)
+      })
+  })
+}
+
+export function postFormData (url, file) {
+  return new Promise((resolve, reject) => {
+    axios.post(url, file,
+      {headers: {'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryGYbwbQBigH1yQRaW'}})
       .then(response => {
         resolve(response.data)
       }, err => {

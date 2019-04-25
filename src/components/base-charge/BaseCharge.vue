@@ -4,14 +4,15 @@
       <el-upload
         class="upload-demo"
         ref="upload"
-        action=""
-        multiple=false
+        action="/api/baseCharge/excelImport"
+        :multiple="false"
         accept=".xls,.xlsx"
-        :auto-upload="false"
-        on-success=""
-        on-error="">
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :limit="1"
+        :auto-upload="false">
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
       </el-upload>
     </div>
@@ -19,7 +20,11 @@
       <el-button size="small" type="primary" @click="getAllBaseCharge">查询</el-button>
       <el-table :data="list" v-loading.table="listLoading" element-loading-text="Loading" fit
                 :row-class-name="tableRowClassName" style="width: 100%;border: 1px solid #ebeef5;">
-        <el-table-column label="地区" prop="area">
+        <el-table-column label="省" prop="province">
+        </el-table-column>
+        <el-table-column label="市" prop="city">
+        </el-table-column>
+        <el-table-column label="区" prop="area">
         </el-table-column>
         <el-table-column label="费用" align="center" prop="charge">
         </el-table-column>
@@ -36,7 +41,8 @@
 </template>
 
 <script>
-import { excelImport, getAllBaseCharge } from '@/api/api'
+// import { excelImport, getAllBaseCharge } from '@/api/api'
+import { getAllBaseCharge } from '@/api/api'
 
 export default {
   name: 'BaseCharge',
@@ -44,7 +50,8 @@ export default {
     return {
       msg: '查询',
       file: null,
-      listLoading: true,
+      formData: null,
+      listLoading: false,
       list: null,
       currentPage: 1,
       totalPage: 1
@@ -59,20 +66,32 @@ export default {
     }
   },
   methods: {
+    handlePreview (file) {
+      console.log(file)
+      this.file = file
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
     submitUpload () {
-      var formData = new FormData()
-      formData.append('file', this.file)
-      excelImport(formData).then(response => {
-        alert(response)
-      })
+      console.log('submitUpload')
+      this.$refs.upload.submit()
     },
     getAllBaseCharge () {
+      this.listLoading = true
       console.log('getAllBaseCharge')
       getAllBaseCharge(this.currentPage).then((response = {}) => {
         this.list = response.list || []
         this.totalPage = parseInt(response.totalPage || 0)
         this.listLoading = false
       })
+    },
+    tableRowClassName ({ row, rowIndex }) {
+      if (rowIndex % 2 === 1) {
+        return 'odd-row'
+      } else {
+        return 'even-row'
+      }
     },
     prePage () {
       if (this.currentPage > 1) {
