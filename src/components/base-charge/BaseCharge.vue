@@ -9,6 +9,8 @@
         accept=".xls,.xlsx"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
+        :on-success="uploadSuccess"
+        :on-error="uploadError"
         :limit="1"
         :auto-upload="false">
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
@@ -75,7 +77,17 @@ export default {
     },
     submitUpload () {
       console.log('submitUpload')
+      this.listLoading = false
       this.$refs.upload.submit()
+    },
+    uploadSuccess () {
+      console.log('uploadSuccess')
+      this.$refs.upload.file = null
+      alert('SUCCESS')
+    },
+    uploadError () {
+      console.log('uploadError')
+      alert('error')
     },
     getAllBaseCharge () {
       this.listLoading = true
