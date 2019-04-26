@@ -2,7 +2,12 @@ import axios from 'axios'
 // import qs from 'qs'
 
 axios.defaults.timeout = 5000
-axios.defaults.baseURL = '/api'
+var isProduction = process.env.NODE_ENV === 'production'
+if (isProduction) {
+  axios.defaults.baseURL = '/'
+} else {
+  axios.defaults.baseURL = '/api'
+}
 
 // http request 拦截器
 axios.interceptors.request.use(

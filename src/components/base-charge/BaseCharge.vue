@@ -4,7 +4,7 @@
       <el-upload
         class="upload-demo"
         ref="upload"
-        action="/api/baseCharge/excelImport"
+        action="/baseCharge/excelImport"
         :multiple="false"
         accept=".xls,.xlsx"
         :on-preview="handlePreview"

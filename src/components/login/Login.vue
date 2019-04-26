@@ -28,7 +28,8 @@
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
-// import { userLogin } from '@/api/api'
+import { userLogin } from '@/api/api'
+import { Message } from 'element-ui'
 
 export default {
   name: 'login',
@@ -79,12 +80,24 @@ export default {
     handleLogin () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          // this.loading = true
-          // userLogin(this.username, this.password).then((res = {}) => {
-          //   this.loading = false
-          //   this.$router.push({ path: `/BaseCharge` })
-          // })
-          this.$router.push({ path: `/BaseCharge` })
+          this.loading = true
+          console.log('username: ' + this.loginForm.username)
+          console.log('password' + this.loginForm.password)
+          userLogin(this.loginForm.username, this.loginForm.password).then((res = {}) => {
+            if (res.result === 'SUCCESS') {
+              console.log('1111111111')
+              this.loading = false
+              this.$router.push({ path: `/BaseCharge` })
+            } else {
+              console.log('222222222')
+              Message({
+                message: '用户名或密码错',
+                type: 'error',
+                duration: 3 * 1000
+              })
+            }
+          })
+          // this.$router.push({ path: `/BaseCharge` })
         }
       })
     }
